@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">TakeIt</string>
     <string name="add_reminder">+ Add Reminder</string>
-    <string name="no_reminders">No reminders yet.\nTap Add Reminder below!</string>
+    <string name="no_reminders">No reminders yet\nTap \u002B to get started</string>
     <string name="title">Title</string>
     <string name="description_optional">Description (optional)</string>
     <string name="reminder_time">Reminder Time</string>

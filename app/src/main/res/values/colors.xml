@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#1976D2</color>
-    <color name="colorPrimaryDark">#1565C0</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
+    <color name="accent">#7C5CBF</color>
+    <color name="accent_pressed">#6A4FB5</color>
+
+    <!-- Dark theme -->
+    <color name="dark_bg">#0F1117</color>
+    <color name="dark_surface">#1A1D2E</color>
+    <color name="dark_surface2">#22263A</color>
+    <color name="dark_text">#FFFFFF</color>
+    <color name="dark_hint">#8B8FA8</color>
+
+    <!-- Light theme -->
+    <color name="light_bg">#F4F5FA</color>
+    <color name="light_surface">#FFFFFF</color>
+    <color name="light_surface2">#ECEEF6</color>
+    <color name="light_text">#1A1D27</color>
+    <color name="light_hint">#8E96A8</color>
+
+    <!-- Legacy compat -->
+    <color name="colorPrimary">#7C5CBF</color>
+    <color name="colorPrimaryDark">#6A4FB5</color>
+    <color name="colorAccent">#7C5CBF</color>
     <color name="white">#FFFFFF</color>
-    <color name="background">#F5F5F5</color>
 </resources>

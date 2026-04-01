@@ -4,24 +4,24 @@
     android:id="@+id/scrollRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="#F5F5F5">
+    android:fillViewport="true">
 
     <LinearLayout
         android:id="@+id/layoutContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
+        <!-- ── Title field ──────────────────────────── -->
         <TextView
             android:id="@+id/tvLabelTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/title"
-            android:textSize="12sp"
-            android:textColor="#757575"
-            android:layout_marginBottom="4dp" />
+            android:text="TITLE"
+            android:textSize="11sp"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="6dp" />
 
         <EditText
             android:id="@+id/etTitle"
@@ -29,19 +29,21 @@
             android:layout_height="wrap_content"
             android:inputType="textCapSentences"
             android:maxLines="1"
-            android:hint="Enter reminder title"
-            android:background="@android:drawable/edit_text"
-            android:padding="8dp" />
+            android:hint="What do you need to do?"
+            android:padding="14dp"
+            android:textSize="15sp"
+            android:background="@android:drawable/edit_text" />
 
+        <!-- ── Description field ────────────────────── -->
         <TextView
             android:id="@+id/tvLabelDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/description_optional"
-            android:textSize="12sp"
-            android:textColor="#757575"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="4dp" />
+            android:text="DESCRIPTION"
+            android:textSize="11sp"
+            android:letterSpacing="0.1"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="6dp" />
 
         <EditText
             android:id="@+id/etDescription"
@@ -50,45 +52,56 @@
             android:inputType="textCapSentences|textMultiLine"
             android:minLines="2"
             android:maxLines="4"
-            android:hint="Enter description (optional)"
-            android:background="@android:drawable/edit_text"
-            android:padding="8dp" />
+            android:hint="Add a note (optional)"
+            android:padding="14dp"
+            android:textSize="15sp"
+            android:background="@android:drawable/edit_text" />
 
+        <!-- ── Time section ──────────────────────────── -->
         <TextView
             android:id="@+id/tvLabelDateTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/reminder_time"
-            android:textSize="12sp"
-            android:textColor="#757575" />
+            android:text="REMINDER TIME"
+            android:textSize="11sp"
+            android:letterSpacing="0.1"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="10dp" />
 
-        <Button
-            android:id="@+id/btnPickTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/pick_time" />
-
+        <!-- Time display -->
         <TextView
             android:id="@+id/tvSelectedDateTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:text="@string/no_time_selected"
-            android:textSize="15sp"
-            android:textColor="#1976D2"
-            android:gravity="center" />
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="14dp" />
 
+        <!-- Pick time button -->
+        <Button
+            android:id="@+id/btnPickTime"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/pick_time"
+            android:textSize="15sp"
+            android:textColor="#7C5CBF"
+            android:background="@drawable/bg_btn_outline"
+            android:letterSpacing="0.03" />
+
+        <!-- ── Save button ───────────────────────────── -->
         <Button
             android:id="@+id/btnSave"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
             android:text="@string/save_reminder"
-            android:background="#1976D2"
+            android:textSize="16sp"
             android:textColor="#FFFFFF"
-            android:padding="12dp" />
+            android:background="@drawable/bg_btn_primary"
+            android:letterSpacing="0.03" />
 
     </LinearLayout>
 

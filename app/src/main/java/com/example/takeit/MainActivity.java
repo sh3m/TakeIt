@@ -16,46 +16,50 @@ import java.util.List;
 
 public class MainActivity extends Activity implements ReminderAdapter.OnReminderClickListener {
 
-    private static final int REQUEST_ADD = 1001;
+    private static final int REQUEST_ADD  = 1001;
     private static final int REQUEST_EDIT = 1002;
     private static final int REQUEST_NOTIF_PERMISSION = 1003;
 
     private ReminderDatabaseHelper dbHelper;
     private ReminderAdapter adapter;
     private List<Reminder> reminders;
-    private TextView tvEmpty;
+
     private View rootLayout;
+    private View header;
+    private View headerDivider;
+    private ListView listView;
+    private TextView tvEmpty;
     private Button btnAdd;
     private Button btnNightMode;
-    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("");
 
         NotificationHelper.createNotificationChannel(this);
         requestNotificationPermissionIfNeeded();
 
-        dbHelper = new ReminderDatabaseHelper(this);
-        rootLayout = findViewById(R.id.rootLayout);
-        tvEmpty = (TextView) findViewById(R.id.tvEmpty);
-        listView = (ListView) findViewById(R.id.listView);
-        btnAdd = (Button) findViewById(R.id.btnAdd);
-        btnNightMode = (Button) findViewById(R.id.btnNightMode);
+        dbHelper      = new ReminderDatabaseHelper(this);
+        rootLayout    = findViewById(R.id.rootLayout);
+        header        = findViewById(R.id.header);
+        headerDivider = findViewById(R.id.headerDivider);
+        listView      = (ListView) findViewById(R.id.listView);
+        tvEmpty       = (TextView) findViewById(R.id.tvEmpty);
+        btnAdd        = (Button)   findViewById(R.id.btnAdd);
+        btnNightMode  = (Button)   findViewById(R.id.btnNightMode);
 
         reminders = dbHelper.getAllReminders();
-        adapter = new ReminderAdapter(this, reminders, this);
+        adapter   = new ReminderAdapter(this, reminders, this);
         listView.setAdapter(adapter);
         updateEmptyState();
-
-        applyNightMode();
+        applyTheme();
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddReminderActivity.class);
-                startActivityForResult(intent, REQUEST_ADD);
+                startActivityForResult(new Intent(MainActivity.this, AddReminderActivity.class), REQUEST_ADD);
             }
         });
 
@@ -68,28 +72,23 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
         });
     }
 
-    private void applyNightMode() {
-        boolean night = NightModeHelper.isNightMode(this);
-        int bg     = NightModeHelper.bg(this);
-        int hint   = NightModeHelper.hint(this);
-        int accent = NightModeHelper.accent(this);
+    private void applyTheme() {
+        boolean night  = NightModeHelper.isNightMode(this);
+        int bg         = NightModeHelper.bg(this);
+        int hintColor  = NightModeHelper.hint(this);
+        int accentColor = NightModeHelper.accent(this);
+        int divColor   = NightModeHelper.divider(this);
 
         rootLayout.setBackgroundColor(bg);
+        header.setBackgroundColor(bg);
+        headerDivider.setBackgroundColor(divColor);
         listView.setBackgroundColor(bg);
-        tvEmpty.setTextColor(hint);
 
-        btnAdd.setBackgroundColor(accent);
-        btnAdd.setTextColor(0xFFFFFFFF);
+        tvEmpty.setTextColor(hintColor);
 
-        if (night) {
-            btnNightMode.setBackgroundColor(0xFF333333);
-            btnNightMode.setTextColor(0xFFFFFFFF);
-            btnNightMode.setText("Day Mode");
-        } else {
-            btnNightMode.setBackgroundColor(0xFFE0E0E0);
-            btnNightMode.setTextColor(0xFF212121);
-            btnNightMode.setText("Night Mode");
-        }
+        // FAB always uses accent — already set via drawable, just set elevation tint
+        // Night mode toggle icon stays as accent text
+        btnNightMode.setTextColor(accentColor);
 
         adapter.notifyDataSetChanged();
     }

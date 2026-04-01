@@ -3,53 +3,92 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btnNightMode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!-- ── Header ─────────────────────────────────── -->
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Night Mode"
-        android:textSize="12sp"
-        android:padding="8dp" />
+        android:paddingStart="20dp"
+        android:paddingEnd="8dp">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="TakeIt"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="#7C5CBF"
+            android:letterSpacing="0.03" />
+
+        <Button
+            android:id="@+id/btnNightMode"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="4dp"
+            android:text="◑"
+            android:textSize="18sp"
+            android:textColor="#7C5CBF"
+            android:background="@android:color/transparent"
+            android:padding="0dp" />
+
+    </RelativeLayout>
+
+    <!-- ── Divider ────────────────────────────────── -->
+    <View
+        android:id="@+id/headerDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/header"
+        android:background="#207C5CBF" />
+
+    <!-- ── List ───────────────────────────────────── -->
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/btnNightMode"
-        android:layout_above="@+id/btnAdd"
-        android:divider="#E0E0E0"
-        android:dividerHeight="1dp"
-        android:padding="4dp"
-        android:clipToPadding="false" />
+        android:layout_below="@+id/headerDivider"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="92dp"
+        android:clipToPadding="false"
+        android:scrollbarStyle="outsideOverlay" />
 
+    <!-- ── Empty state ────────────────────────────── -->
     <TextView
         android:id="@+id/tvEmpty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="@string/no_reminders"
-        android:textSize="16sp"
-        android:textColor="#757575"
+        android:textSize="15sp"
         android:gravity="center"
+        android:lineSpacingMultiplier="1.4"
         android:visibility="gone" />
 
+    <!-- ── FAB ────────────────────────────────────── -->
     <Button
         android:id="@+id/btnAdd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
         android:layout_alignParentBottom="true"
-        android:layout_margin="12dp"
-        android:text="@string/add_reminder"
-        android:background="#1976D2"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="20dp"
+        android:text="+"
+        android:textSize="30sp"
         android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:padding="12dp" />
+        android:background="@drawable/bg_fab"
+        android:elevation="10dp"
+        android:padding="0dp"
+        android:includeFontPadding="false" />
 
 </RelativeLayout>
