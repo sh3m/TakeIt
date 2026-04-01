@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="accent">#7C5CBF</color>
-    <color name="accent_pressed">#6A4FB5</color>
+    <color name="accent">#00B4CC</color>
+    <color name="accent_pressed">#0097A7</color>
 
-    <!-- Dark theme -->
-    <color name="dark_bg">#0F1117</color>
-    <color name="dark_surface">#1A1D2E</color>
-    <color name="dark_surface2">#22263A</color>
-    <color name="dark_text">#FFFFFF</color>
-    <color name="dark_hint">#8B8FA8</color>
+    <!-- Dark theme (matches icon: deep navy bg, teal accent) -->
+    <color name="dark_bg">#07090F</color>
+    <color name="dark_surface">#0D1520</color>
+    <color name="dark_surface2">#132030</color>
+    <color name="dark_text">#E8F5F8</color>
+    <color name="dark_hint">#4A7A8A</color>
 
     <!-- Light theme -->
-    <color name="light_bg">#F4F5FA</color>
+    <color name="light_bg">#E8F5FA</color>
     <color name="light_surface">#FFFFFF</color>
-    <color name="light_surface2">#ECEEF6</color>
-    <color name="light_text">#1A1D27</color>
-    <color name="light_hint">#8E96A8</color>
+    <color name="light_surface2">#D0EBF2</color>
+    <color name="light_text">#071520</color>
+    <color name="light_hint">#4A7080</color>
 
     <!-- Legacy compat -->
-    <color name="colorPrimary">#7C5CBF</color>
-    <color name="colorPrimaryDark">#6A4FB5</color>
-    <color name="colorAccent">#7C5CBF</color>
+    <color name="colorPrimary">#00B4CC</color>
+    <color name="colorPrimaryDark">#0097A7</color>
+    <color name="colorAccent">#00B4CC</color>
     <color name="white">#FFFFFF</color>
 </resources>

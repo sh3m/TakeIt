@@ -8,23 +8,23 @@ public class NightModeHelper {
     private static final String PREFS_NAME = "reminder_prefs";
     private static final String KEY_NIGHT_MODE = "night_mode";
 
-    // Dark theme
-    static final int DARK_BG       = 0xFF0F1117;
-    static final int DARK_SURFACE  = 0xFF1A1D2E;
-    static final int DARK_SURFACE2 = 0xFF22263A;
-    static final int DARK_TEXT     = 0xFFFFFFFF;
-    static final int DARK_HINT     = 0xFF8B8FA8;
-    static final int DARK_ACCENT   = 0xFF7C5CBF;
-    static final int DARK_DIVIDER  = 0xFF2A2D40;
+    // Dark theme — mirrors the icon palette (deep navy + teal)
+    static final int DARK_BG       = 0xFF07090F;
+    static final int DARK_SURFACE  = 0xFF0D1520;
+    static final int DARK_SURFACE2 = 0xFF132030;
+    static final int DARK_TEXT     = 0xFFE8F5F8;
+    static final int DARK_HINT     = 0xFF4A7A8A;
+    static final int DARK_ACCENT   = 0xFF00B4CC;
+    static final int DARK_DIVIDER  = 0xFF112030;
 
     // Light theme
-    static final int LIGHT_BG       = 0xFFF4F5FA;
+    static final int LIGHT_BG       = 0xFFE8F5FA;
     static final int LIGHT_SURFACE  = 0xFFFFFFFF;
-    static final int LIGHT_SURFACE2 = 0xFFECEEF6;
-    static final int LIGHT_TEXT     = 0xFF1A1D27;
-    static final int LIGHT_HINT     = 0xFF8E96A8;
-    static final int LIGHT_ACCENT   = 0xFF7C5CBF;
-    static final int LIGHT_DIVIDER  = 0xFFE4E6F0;
+    static final int LIGHT_SURFACE2 = 0xFFD0EBF2;
+    static final int LIGHT_TEXT     = 0xFF071520;
+    static final int LIGHT_HINT     = 0xFF4A7080;
+    static final int LIGHT_ACCENT   = 0xFF0097A7;
+    static final int LIGHT_DIVIDER  = 0xFFB8DDE8;
 
     public static boolean isNightMode(Context context) {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

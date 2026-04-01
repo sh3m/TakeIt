@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,7 +31,7 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
     private ListView listView;
     private TextView tvEmpty;
     private Button btnAdd;
-    private Button btnNightMode;
+    private ImageButton btnNightMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +46,10 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
         rootLayout    = findViewById(R.id.rootLayout);
         header        = findViewById(R.id.header);
         headerDivider = findViewById(R.id.headerDivider);
-        listView      = (ListView) findViewById(R.id.listView);
-        tvEmpty       = (TextView) findViewById(R.id.tvEmpty);
-        btnAdd        = (Button)   findViewById(R.id.btnAdd);
-        btnNightMode  = (Button)   findViewById(R.id.btnNightMode);
+        listView      = (ListView)     findViewById(R.id.listView);
+        tvEmpty       = (TextView)     findViewById(R.id.tvEmpty);
+        btnAdd        = (Button)       findViewById(R.id.btnAdd);
+        btnNightMode  = (ImageButton)  findViewById(R.id.btnNightMode);
 
         reminders = dbHelper.getAllReminders();
         adapter   = new ReminderAdapter(this, reminders, this);
@@ -73,7 +74,6 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
     }
 
     private void applyTheme() {
-        boolean night  = NightModeHelper.isNightMode(this);
         int bg         = NightModeHelper.bg(this);
         int hintColor  = NightModeHelper.hint(this);
         int accentColor = NightModeHelper.accent(this);
@@ -83,12 +83,8 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
         header.setBackgroundColor(bg);
         headerDivider.setBackgroundColor(divColor);
         listView.setBackgroundColor(bg);
-
         tvEmpty.setTextColor(hintColor);
-
-        // FAB always uses accent — already set via drawable, just set elevation tint
-        // Night mode toggle icon stays as accent text
-        btnNightMode.setTextColor(accentColor);
+        btnNightMode.setColorFilter(accentColor);
 
         adapter.notifyDataSetChanged();
     }
