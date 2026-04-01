@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="#07090F">
+
+    <!-- Top spacer -->
+    <View android:layout_width="0dp" android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- App icon -->
+    <ImageView
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:src="@mipmap/ic_launcher"
+        android:scaleType="fitCenter" />
+
+    <!-- Time -->
+    <TextView
+        android:id="@+id/tvAlarmTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:textSize="64sp"
+        android:textStyle="bold"
+        android:textColor="#00B4CC"
+        android:letterSpacing="0.03" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvAlarmTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:gravity="center" />
+
+    <!-- Description -->
+    <TextView
+        android:id="@+id/tvAlarmDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:textSize="15sp"
+        android:textColor="#7A9EB0"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.5" />
+
+    <!-- Bottom spacer -->
+    <View android:layout_width="0dp" android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#0D2030"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp" />
+
+    <!-- Taken button -->
+    <Button
+        android:id="@+id/btnTaken"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="48dp"
+        android:text="TAKEN"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:letterSpacing="0.12"
+        android:background="@drawable/bg_btn_primary" />
+
+</LinearLayout>

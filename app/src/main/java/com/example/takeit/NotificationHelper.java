@@ -29,7 +29,11 @@ public class NotificationHelper {
                     String.class, CharSequence.class, int.class);
             Object channel = ctor.newInstance(CHANNEL_ID, "Reminders", IMPORTANCE_HIGH);
             Method setDesc = channelClass.getMethod("setDescription", String.class);
-            setDesc.invoke(channel, "Daily reminder notifications");
+            setDesc.invoke(channel, "Daily reminder alarms");
+            Method enableVibration = channelClass.getMethod("enableVibration", boolean.class);
+            enableVibration.invoke(channel, true);
+            Method setVibrationPattern = channelClass.getMethod("setVibrationPattern", long[].class);
+            setVibrationPattern.invoke(channel, new long[]{0, 600, 300, 600, 300});
             NotificationManager nm =
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             Method create = nm.getClass().getMethod("createNotificationChannel", channelClass);
