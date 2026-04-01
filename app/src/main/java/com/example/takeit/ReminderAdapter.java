@@ -65,7 +65,7 @@ public class ReminderAdapter extends BaseAdapter {
         card.setShape(GradientDrawable.RECTANGLE);
         card.setColor(surfaceColor);
         card.setCornerRadius(dp(16));
-        convertView.setBackground(card);
+        holder.cardRoot.setBackground(card);
 
         holder.tvTime.setTextColor(accentColor);
         holder.tvTitle.setTextColor(textColor);
@@ -97,10 +97,12 @@ public class ReminderAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
+        View cardRoot;
         TextView tvTime, tvTitle, tvDescription;
         ImageButton btnEdit, btnDelete;
 
         ViewHolder(View v) {
+            cardRoot      = v.findViewById(R.id.cardRoot);
             tvTime        = (TextView)     v.findViewById(R.id.tvDateTime);
             tvTitle       = (TextView)     v.findViewById(R.id.tvTitle);
             tvDescription = (TextView)     v.findViewById(R.id.tvDescription);
