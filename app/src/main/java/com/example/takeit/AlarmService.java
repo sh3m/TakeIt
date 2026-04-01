@@ -16,7 +16,14 @@ public class AlarmService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Post the required foreground notification immediately
-        startForeground(FOREGROUND_NOTIF_ID, buildForegroundNotification());
+        try {
+            startForeground(FOREGROUND_NOTIF_ID, buildForegroundNotification());
+        } catch (Exception e) {
+            // startForeground can throw on Android 14 without foregroundServiceType.
+            // The notification posted by NotificationReceiver is still the fallback.
+            stopSelf();
+            return START_NOT_STICKY;
+        }
 
         // Foreground services are always allowed to start activities
         if (intent != null) {

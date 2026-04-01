@@ -57,6 +57,12 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
         updateEmptyState();
         applyTheme();
 
+        // Reschedule all reminders every time the app opens — ensures alarms survive
+        // APK reinstalls, reboots, or any AlarmManager state loss.
+        for (Reminder r : reminders) {
+            NotificationHelper.scheduleReminder(this, r);
+        }
+
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
