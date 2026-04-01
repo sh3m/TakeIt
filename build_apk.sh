@@ -13,7 +13,7 @@ BUILD_DIR=/tmp/reminder_build
 SRC=app/src/main/java
 MANIFEST=app/src/main/AndroidManifest.xml
 RES=app/src/main/res
-PKG=com/example/reminderapp
+PKG=com/example/takeit
 
 echo "=== Cleaning build dir ==="
 rm -rf $BUILD_DIR
