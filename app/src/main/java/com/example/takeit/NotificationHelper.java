@@ -9,6 +9,7 @@ import android.os.Build;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Calendar;
 
 public class NotificationHelper {
 
@@ -16,14 +17,10 @@ public class NotificationHelper {
     static final String EXTRA_REMINDER_ID = "reminder_id";
     static final String EXTRA_TITLE = "title";
     static final String EXTRA_DESCRIPTION = "description";
+    static final String EXTRA_TIME_MINUTES = "time_minutes";
 
-    // NotificationManager.IMPORTANCE_HIGH = 4 (API 26+)
     private static final int IMPORTANCE_HIGH = 4;
 
-    /**
-     * Creates a notification channel on API 26+. Safe to call on all API levels;
-     * uses reflection so the code compiles against API 23.
-     */
     public static void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT < 26) return;
         try {
@@ -31,17 +28,14 @@ public class NotificationHelper {
             Constructor<?> ctor = channelClass.getConstructor(
                     String.class, CharSequence.class, int.class);
             Object channel = ctor.newInstance(CHANNEL_ID, "Reminders", IMPORTANCE_HIGH);
-
-            // channel.setDescription("Reminder notifications")
             Method setDesc = channelClass.getMethod("setDescription", String.class);
-            setDesc.invoke(channel, "Reminder notifications");
-
+            setDesc.invoke(channel, "Daily reminder notifications");
             NotificationManager nm =
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             Method create = nm.getClass().getMethod("createNotificationChannel", channelClass);
             create.invoke(nm, channel);
         } catch (Exception e) {
-            // Silently ignored — notifications will still appear but may be uncategorised
+            // ignored
         }
     }
 
@@ -51,6 +45,7 @@ public class NotificationHelper {
         intent.putExtra(EXTRA_REMINDER_ID, reminder.getId());
         intent.putExtra(EXTRA_TITLE, reminder.getTitle());
         intent.putExtra(EXTRA_DESCRIPTION, reminder.getDescription());
+        intent.putExtra(EXTRA_TIME_MINUTES, reminder.getTimeMinutes());
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
@@ -59,19 +54,12 @@ public class NotificationHelper {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
+        long triggerTime = nextTriggerTime(reminder.getTimeMinutes());
+
         if (Build.VERSION.SDK_INT >= 23) {
-            // setExactAndAllowWhileIdle available from API 23
-            alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    reminder.getDateTimeMillis(),
-                    pendingIntent
-            );
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
         } else {
-            alarmManager.setExact(
-                    AlarmManager.RTC_WAKEUP,
-                    reminder.getDateTimeMillis(),
-                    pendingIntent
-            );
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
         }
     }
 
@@ -86,5 +74,18 @@ public class NotificationHelper {
         );
         alarmManager.cancel(pendingIntent);
         pendingIntent.cancel();
+    }
+
+    /** Returns the next wall-clock time (ms) for the given time-of-day. Today if not yet passed, tomorrow if it has. */
+    static long nextTriggerTime(int timeMinutes) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, timeMinutes / 60);
+        cal.set(Calendar.MINUTE, timeMinutes % 60);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        if (cal.getTimeInMillis() <= System.currentTimeMillis()) {
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        return cal.getTimeInMillis();
     }
 }

@@ -1,12 +1,10 @@
 package com.example.takeit;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -22,15 +20,12 @@ public class AddReminderActivity extends Activity {
     static final String EXTRA_REMINDER_ID = "reminder_id";
 
     private EditText etTitle, etDescription;
-    private TextView tvSelectedDateTime;
-    private Button btnPickDate, btnPickTime, btnSave;
+    private TextView tvSelectedTime;
+    private Button btnPickTime, btnSave;
 
-    private final Calendar selectedCalendar = Calendar.getInstance();
-    private boolean dateTimeSet = false;
+    private int selectedHour = -1;
+    private int selectedMinute = -1;
     private int editingReminderId = -1;
-
-    private static final SimpleDateFormat DISPLAY_FORMAT =
-            new SimpleDateFormat("EEE, MMM d yyyy  h:mm a", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +34,7 @@ public class AddReminderActivity extends Activity {
 
         etTitle = (EditText) findViewById(R.id.etTitle);
         etDescription = (EditText) findViewById(R.id.etDescription);
-        tvSelectedDateTime = (TextView) findViewById(R.id.tvSelectedDateTime);
-        btnPickDate = (Button) findViewById(R.id.btnPickDate);
+        tvSelectedTime = (TextView) findViewById(R.id.tvSelectedDateTime);
         btnPickTime = (Button) findViewById(R.id.btnPickTime);
         btnSave = (Button) findViewById(R.id.btnSave);
 
@@ -54,12 +48,6 @@ public class AddReminderActivity extends Activity {
 
         applyNightMode();
 
-        btnPickDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePicker();
-            }
-        });
         btnPickTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,7 +86,7 @@ public class AddReminderActivity extends Activity {
         etDescription.setTextColor(text);
         etDescription.setHintTextColor(hint);
 
-        tvSelectedDateTime.setTextColor(accent);
+        tvSelectedTime.setTextColor(accent);
 
         btnSave.setBackgroundColor(accent);
         btnSave.setTextColor(0xFFFFFFFF);
@@ -111,41 +99,29 @@ public class AddReminderActivity extends Activity {
 
         etTitle.setText(reminder.getTitle());
         etDescription.setText(reminder.getDescription());
-        selectedCalendar.setTimeInMillis(reminder.getDateTimeMillis());
-        dateTimeSet = true;
-        tvSelectedDateTime.setText(DISPLAY_FORMAT.format(selectedCalendar.getTime()));
-    }
-
-    private void showDatePicker() {
-        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                selectedCalendar.set(Calendar.YEAR, year);
-                selectedCalendar.set(Calendar.MONTH, month);
-                selectedCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateDateTimeDisplay();
-            }
-        }, selectedCalendar.get(Calendar.YEAR),
-                selectedCalendar.get(Calendar.MONTH),
-                selectedCalendar.get(Calendar.DAY_OF_MONTH)).show();
+        selectedHour = reminder.getTimeMinutes() / 60;
+        selectedMinute = reminder.getTimeMinutes() % 60;
+        tvSelectedTime.setText(formatTime(selectedHour, selectedMinute));
     }
 
     private void showTimePicker() {
+        int initHour = selectedHour >= 0 ? selectedHour : Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        int initMinute = selectedMinute >= 0 ? selectedMinute : Calendar.getInstance().get(Calendar.MINUTE);
         new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                selectedCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                selectedCalendar.set(Calendar.MINUTE, minute);
-                selectedCalendar.set(Calendar.SECOND, 0);
-                dateTimeSet = true;
-                updateDateTimeDisplay();
+                selectedHour = hourOfDay;
+                selectedMinute = minute;
+                tvSelectedTime.setText(formatTime(selectedHour, selectedMinute));
             }
-        }, selectedCalendar.get(Calendar.HOUR_OF_DAY),
-                selectedCalendar.get(Calendar.MINUTE), false).show();
+        }, initHour, initMinute, false).show();
     }
 
-    private void updateDateTimeDisplay() {
-        tvSelectedDateTime.setText(DISPLAY_FORMAT.format(selectedCalendar.getTime()));
+    private String formatTime(int hour, int minute) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        return new SimpleDateFormat("h:mm a", Locale.getDefault()).format(cal.getTime());
     }
 
     private void saveReminder() {
@@ -157,27 +133,22 @@ public class AddReminderActivity extends Activity {
             etTitle.requestFocus();
             return;
         }
-        if (!dateTimeSet) {
-            Toast.makeText(this, "Please set a date and time", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (selectedCalendar.getTimeInMillis() <= System.currentTimeMillis()) {
-            Toast.makeText(this, "Please choose a future date and time", Toast.LENGTH_SHORT).show();
+        if (selectedHour < 0) {
+            Toast.makeText(this, "Please set a time", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        int timeMinutes = selectedHour * 60 + selectedMinute;
         ReminderDatabaseHelper db = new ReminderDatabaseHelper(this);
 
         if (editingReminderId != -1) {
-            Reminder updated = new Reminder(editingReminderId, title, description,
-                    selectedCalendar.getTimeInMillis(), false);
+            Reminder updated = new Reminder(editingReminderId, title, description, timeMinutes);
             db.updateReminder(updated);
             NotificationHelper.cancelReminder(this, editingReminderId);
             NotificationHelper.scheduleReminder(this, updated);
             Toast.makeText(this, "Reminder updated", Toast.LENGTH_SHORT).show();
         } else {
-            Reminder reminder = new Reminder(0, title, description,
-                    selectedCalendar.getTimeInMillis(), false);
+            Reminder reminder = new Reminder(0, title, description, timeMinutes);
             long newId = db.addReminder(reminder);
             reminder.setId((int) newId);
             NotificationHelper.scheduleReminder(this, reminder);

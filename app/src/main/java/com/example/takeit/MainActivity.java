@@ -70,10 +70,9 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
 
     private void applyNightMode() {
         boolean night = NightModeHelper.isNightMode(this);
-
-        int bg      = NightModeHelper.bg(this);
-        int hint    = NightModeHelper.hint(this);
-        int accent  = NightModeHelper.accent(this);
+        int bg     = NightModeHelper.bg(this);
+        int hint   = NightModeHelper.hint(this);
+        int accent = NightModeHelper.accent(this);
 
         rootLayout.setBackgroundColor(bg);
         listView.setBackgroundColor(bg);
@@ -95,7 +94,6 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
         adapter.notifyDataSetChanged();
     }
 
-    /** Request POST_NOTIFICATIONS on Android 13+ (API 33+). */
     private void requestNotificationPermissionIfNeeded() {
         if (Build.VERSION.SDK_INT >= 33) {
             String perm = "android.permission.POST_NOTIFICATIONS";
@@ -108,9 +106,7 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            refreshReminders();
-        }
+        if (resultCode == RESULT_OK) refreshReminders();
     }
 
     @Override
@@ -152,19 +148,5 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
-    }
-
-    @Override
-    public void onToggleDone(Reminder reminder, boolean done) {
-        dbHelper.markDone(reminder.getId(), done);
-        if (done) {
-            NotificationHelper.cancelReminder(this, reminder.getId());
-        } else {
-            Reminder updated = dbHelper.getReminderById(reminder.getId());
-            if (updated != null && updated.getDateTimeMillis() > System.currentTimeMillis()) {
-                NotificationHelper.scheduleReminder(this, updated);
-            }
-        }
-        reminder.setDone(done);
     }
 }

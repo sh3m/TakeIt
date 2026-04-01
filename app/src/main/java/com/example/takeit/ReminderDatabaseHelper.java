@@ -12,14 +12,13 @@ import java.util.List;
 public class ReminderDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "reminders.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     static final String TABLE_REMINDERS = "reminders";
     static final String COL_ID = "id";
     static final String COL_TITLE = "title";
     static final String COL_DESCRIPTION = "description";
-    static final String COL_DATETIME = "datetime_millis";
-    static final String COL_DONE = "is_done";
+    static final String COL_TIME_MINUTES = "time_minutes";
 
     public ReminderDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -27,14 +26,12 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTable = "CREATE TABLE " + TABLE_REMINDERS + " ("
+        db.execSQL("CREATE TABLE " + TABLE_REMINDERS + " ("
                 + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + COL_TITLE + " TEXT NOT NULL, "
                 + COL_DESCRIPTION + " TEXT, "
-                + COL_DATETIME + " INTEGER NOT NULL, "
-                + COL_DONE + " INTEGER DEFAULT 0"
-                + ")";
-        db.execSQL(createTable);
+                + COL_TIME_MINUTES + " INTEGER NOT NULL"
+                + ")");
     }
 
     @Override
@@ -48,8 +45,7 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COL_TITLE, reminder.getTitle());
         values.put(COL_DESCRIPTION, reminder.getDescription());
-        values.put(COL_DATETIME, reminder.getDateTimeMillis());
-        values.put(COL_DONE, reminder.isDone() ? 1 : 0);
+        values.put(COL_TIME_MINUTES, reminder.getTimeMinutes());
         long id = db.insert(TABLE_REMINDERS, null, values);
         db.close();
         return id;
@@ -59,16 +55,10 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
         List<Reminder> reminders = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_REMINDERS, null, null, null, null, null,
-                COL_DATETIME + " ASC");
-
+                COL_TIME_MINUTES + " ASC");
         if (cursor.moveToFirst()) {
             do {
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow(COL_ID));
-                String title = cursor.getString(cursor.getColumnIndexOrThrow(COL_TITLE));
-                String desc = cursor.getString(cursor.getColumnIndexOrThrow(COL_DESCRIPTION));
-                long dt = cursor.getLong(cursor.getColumnIndexOrThrow(COL_DATETIME));
-                boolean done = cursor.getInt(cursor.getColumnIndexOrThrow(COL_DONE)) == 1;
-                reminders.add(new Reminder(id, title, desc, dt, done));
+                reminders.add(fromCursor(cursor));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -82,13 +72,7 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
                 COL_ID + "=?", new String[]{String.valueOf(id)},
                 null, null, null);
         Reminder reminder = null;
-        if (cursor.moveToFirst()) {
-            String title = cursor.getString(cursor.getColumnIndexOrThrow(COL_TITLE));
-            String desc = cursor.getString(cursor.getColumnIndexOrThrow(COL_DESCRIPTION));
-            long dt = cursor.getLong(cursor.getColumnIndexOrThrow(COL_DATETIME));
-            boolean done = cursor.getInt(cursor.getColumnIndexOrThrow(COL_DONE)) == 1;
-            reminder = new Reminder(id, title, desc, dt, done);
-        }
+        if (cursor.moveToFirst()) reminder = fromCursor(cursor);
         cursor.close();
         db.close();
         return reminder;
@@ -99,8 +83,7 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COL_TITLE, reminder.getTitle());
         values.put(COL_DESCRIPTION, reminder.getDescription());
-        values.put(COL_DATETIME, reminder.getDateTimeMillis());
-        values.put(COL_DONE, reminder.isDone() ? 1 : 0);
+        values.put(COL_TIME_MINUTES, reminder.getTimeMinutes());
         int rows = db.update(TABLE_REMINDERS, values, COL_ID + "=?",
                 new String[]{String.valueOf(reminder.getId())});
         db.close();
@@ -113,11 +96,11 @@ public class ReminderDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void markDone(int id, boolean done) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COL_DONE, done ? 1 : 0);
-        db.update(TABLE_REMINDERS, values, COL_ID + "=?", new String[]{String.valueOf(id)});
-        db.close();
+    private Reminder fromCursor(Cursor cursor) {
+        int id = cursor.getInt(cursor.getColumnIndexOrThrow(COL_ID));
+        String title = cursor.getString(cursor.getColumnIndexOrThrow(COL_TITLE));
+        String desc = cursor.getString(cursor.getColumnIndexOrThrow(COL_DESCRIPTION));
+        int timeMinutes = cursor.getInt(cursor.getColumnIndexOrThrow(COL_TIME_MINUTES));
+        return new Reminder(id, title, desc, timeMinutes);
     }
 }

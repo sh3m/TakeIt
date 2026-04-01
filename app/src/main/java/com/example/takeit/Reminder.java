@@ -4,15 +4,13 @@ public class Reminder {
     private int id;
     private String title;
     private String description;
-    private long dateTimeMillis;
-    private boolean isDone;
+    private int timeMinutes; // minutes since midnight (0–1439)
 
-    public Reminder(int id, String title, String description, long dateTimeMillis, boolean isDone) {
+    public Reminder(int id, String title, String description, int timeMinutes) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.dateTimeMillis = dateTimeMillis;
-        this.isDone = isDone;
+        this.timeMinutes = timeMinutes;
     }
 
     public int getId() { return id; }
@@ -24,9 +22,6 @@ public class Reminder {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public long getDateTimeMillis() { return dateTimeMillis; }
-    public void setDateTimeMillis(long dateTimeMillis) { this.dateTimeMillis = dateTimeMillis; }
-
-    public boolean isDone() { return isDone; }
-    public void setDone(boolean done) { isDone = done; }
+    public int getTimeMinutes() { return timeMinutes; }
+    public void setTimeMinutes(int timeMinutes) { this.timeMinutes = timeMinutes; }
 }
