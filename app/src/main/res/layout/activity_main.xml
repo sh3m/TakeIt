@@ -52,7 +52,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/headerDivider"
         android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
+        android:dividerHeight="16dp"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
         android:paddingTop="8dp"
