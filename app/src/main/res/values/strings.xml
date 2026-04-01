@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TakeIt</string>
+    <string name="add_reminder">+ Add Reminder</string>
+    <string name="no_reminders">No reminders yet.\nTap Add Reminder below!</string>
+    <string name="title">Title</string>
+    <string name="description_optional">Description (optional)</string>
+    <string name="reminder_date_time">Reminder Date &amp; Time</string>
+    <string name="pick_date">Pick Date</string>
+    <string name="pick_time">Pick Time</string>
+    <string name="no_date_selected">No date/time selected</string>
+    <string name="save_reminder">Save Reminder</string>
+</resources>
