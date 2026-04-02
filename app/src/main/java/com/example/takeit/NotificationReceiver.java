@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.provider.Settings;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -34,33 +35,20 @@ public class NotificationReceiver extends BroadcastReceiver {
         alarmIntent.putExtra(NotificationHelper.EXTRA_TIME_MINUTES, timeMinutes);
         alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        // 1. Always post a fullScreenIntent notification — guaranteed to work on all versions.
-        //    Screen off/locked → system auto-launches AlarmActivity.
-        //    Screen on → heads-up appears; AlarmActivity launches via step 2.
-        PendingIntent pi = PendingIntent.getActivity(
-                context, reminderId, alarmIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        postNotification(context, reminderId, title, description, pi);
-
-        // 2. Start foreground service so it can launch AlarmActivity when screen is on.
-        //    Wrapped in try/catch — if it fails, the notification above is the fallback.
-        try {
-            Intent svc = new Intent(context, AlarmService.class);
-            svc.putExtra(NotificationHelper.EXTRA_REMINDER_ID, reminderId);
-            svc.putExtra(NotificationHelper.EXTRA_TITLE, title);
-            svc.putExtra(NotificationHelper.EXTRA_DESCRIPTION, description);
-            svc.putExtra(NotificationHelper.EXTRA_TIME_MINUTES, timeMinutes);
-            if (Build.VERSION.SDK_INT >= 26) {
-                Method m = Context.class.getMethod("startForegroundService", Intent.class);
-                m.invoke(context, svc);
-            } else {
-                context.startService(svc);
-            }
-        } catch (Exception e) {
-            // Service failed — notification above is still showing, alarm is not silent.
+        // If SYSTEM_ALERT_WINDOW is granted, start the activity directly — no notification needed.
+        // This bypasses all background launch restrictions on every Android version.
+        if (Build.VERSION.SDK_INT >= 23 && Settings.canDrawOverlays(context)) {
+            context.startActivity(alarmIntent);
+        } else {
+            // Fallback: fullScreenIntent notification.
+            // Auto-launches on lock screen; shows heads-up when screen is on.
+            PendingIntent pi = PendingIntent.getActivity(
+                    context, reminderId, alarmIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            postNotification(context, reminderId, title, description, pi);
         }
 
-        // 3. Reschedule for same time tomorrow
+        // Reschedule for same time tomorrow
         if (timeMinutes >= 0) {
             Reminder reminder = new Reminder(reminderId, title, description, timeMinutes);
             NotificationHelper.scheduleReminder(context, reminder);

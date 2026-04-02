@@ -1,7 +1,7 @@
 package com.example.takeit;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.app.NotificationManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -113,8 +113,9 @@ public class AlarmActivity extends Activity {
     private void dismiss() {
         if (vibrator != null) vibrator.cancel();
         if (ringtone != null && ringtone.isPlaying()) ringtone.stop();
-        // Stop the foreground service (removes its notification)
-        stopService(new Intent(this, AlarmService.class));
+        if (reminderId != -1) {
+            ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(reminderId);
+        }
         finish();
     }
 

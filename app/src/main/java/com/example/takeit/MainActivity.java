@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -41,6 +43,7 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
 
         NotificationHelper.createNotificationChannel(this);
         requestNotificationPermissionIfNeeded();
+        requestOverlayPermissionIfNeeded();
 
         dbHelper      = new ReminderDatabaseHelper(this);
         rootLayout    = findViewById(R.id.rootLayout);
@@ -101,6 +104,24 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
             if (checkSelfPermission(perm) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{perm}, REQUEST_NOTIF_PERMISSION);
             }
+        }
+    }
+
+    private void requestOverlayPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(this)) {
+            new AlertDialog.Builder(this)
+                .setTitle("Allow alarm display")
+                .setMessage("To show alarms instantly over other apps, enable \"Display over other apps\" for TakeIt.")
+                .setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface d, int w) {
+                        startActivity(new Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + getPackageName())
+                        ));
+                    }
+                })
+                .setNegativeButton("Later", null)
+                .show();
         }
     }
 
