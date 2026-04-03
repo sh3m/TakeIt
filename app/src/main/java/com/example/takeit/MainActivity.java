@@ -83,9 +83,9 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
     }
 
     private void applyTheme() {
+        boolean night  = NightModeHelper.isNightMode(this);
         int bg         = NightModeHelper.bg(this);
         int hintColor  = NightModeHelper.hint(this);
-        int accentColor = NightModeHelper.accent(this);
         int divColor   = NightModeHelper.divider(this);
 
         rootLayout.setBackgroundColor(bg);
@@ -93,7 +93,15 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
         headerDivider.setBackgroundColor(divColor);
         listView.setBackgroundColor(bg);
         tvEmpty.setTextColor(hintColor);
-        btnNightMode.setColorFilter(accentColor);
+
+        // Night mode → show white sun; Day mode → show black moon
+        if (night) {
+            btnNightMode.setImageResource(R.drawable.ic_sun);
+            btnNightMode.setColorFilter(0xFFFFFFFF);
+        } else {
+            btnNightMode.setImageResource(R.drawable.ic_moon);
+            btnNightMode.setColorFilter(0xFF000000);
+        }
 
         adapter.notifyDataSetChanged();
     }
