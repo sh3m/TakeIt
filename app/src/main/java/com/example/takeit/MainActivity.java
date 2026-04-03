@@ -34,6 +34,7 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
     private TextView tvEmpty;
     private Button btnAdd;
     private ImageButton btnNightMode;
+    private android.widget.ImageView ivHeaderIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +52,9 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
         headerDivider = findViewById(R.id.headerDivider);
         listView      = (ListView)     findViewById(R.id.listView);
         tvEmpty       = (TextView)     findViewById(R.id.tvEmpty);
-        btnAdd        = (Button)       findViewById(R.id.btnAdd);
-        btnNightMode  = (ImageButton)  findViewById(R.id.btnNightMode);
+        btnAdd        = (Button)                    findViewById(R.id.btnAdd);
+        btnNightMode  = (ImageButton)               findViewById(R.id.btnNightMode);
+        ivHeaderIcon  = (android.widget.ImageView)  findViewById(R.id.ivHeaderIcon);
 
         reminders = dbHelper.getAllReminders();
         adapter   = new ReminderAdapter(this, reminders, this);
@@ -94,13 +96,18 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
         listView.setBackgroundColor(bg);
         tvEmpty.setTextColor(hintColor);
 
-        // Night mode → show white sun; Day mode → show black moon
+        // Night mode → white sun + dark launcher icon
+        // Day mode   → black moon + blue day icon in header
         if (night) {
             btnNightMode.setImageResource(R.drawable.ic_sun);
             btnNightMode.setColorFilter(0xFFFFFFFF);
+            ivHeaderIcon.setImageResource(R.mipmap.ic_launcher);
+            ivHeaderIcon.clearColorFilter();
         } else {
             btnNightMode.setImageResource(R.drawable.ic_moon);
             btnNightMode.setColorFilter(0xFF000000);
+            ivHeaderIcon.setImageResource(R.drawable.ic_header_day);
+            ivHeaderIcon.clearColorFilter();
         }
 
         adapter.notifyDataSetChanged();

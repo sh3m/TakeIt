@@ -14,8 +14,9 @@
         android:paddingStart="14dp"
         android:paddingEnd="10dp">
 
-        <!-- App icon on the left -->
+        <!-- App icon on the left — swapped per theme in MainActivity -->
         <ImageView
+            android:id="@+id/ivHeaderIcon"
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:layout_centerVertical="true"
