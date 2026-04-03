@@ -101,7 +101,7 @@ public class MainActivity extends Activity implements ReminderAdapter.OnReminder
         if (night) {
             btnNightMode.setImageResource(R.drawable.ic_sun);
             btnNightMode.setColorFilter(0xFFFFFFFF);
-            ivHeaderIcon.setImageResource(R.mipmap.ic_launcher);
+            ivHeaderIcon.setImageResource(R.drawable.ic_header_night);
             ivHeaderIcon.clearColorFilter();
         } else {
             btnNightMode.setImageResource(R.drawable.ic_moon);
